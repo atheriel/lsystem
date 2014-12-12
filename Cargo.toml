@@ -3,3 +3,11 @@
 name = "lsystem"
 version = "0.0.1"
 authors = ["Atheriel <atheriel@gmail.com>"]
+
+[lib]
+name = "lsystem"
+path = "src/lib.rs"
+
+[[bin]]
+name = "algae"
+path = "src/algae.rs"
