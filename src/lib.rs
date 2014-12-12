@@ -31,8 +31,13 @@ pub struct LSystemTypeIterator<T> {
 impl<T: Clone> Iterator<Vec<T>> for LSystemTypeIterator<T> {
     fn next(&mut self) -> Option<Vec<T>> {
         let mut new_state: Vec<T> = Vec::new();
-        new_state.push_all(self.current_state.as_slice());
-        Some(new_state)
+        for element in self.current_state.clone().into_iter() {
+            let rules = self.rules;
+            let entry = rules(element);
+            new_state.push_all(entry.as_slice());
+        }
+        self.current_state = new_state;
+        Some(self.current_state.clone())
     }
 }
 
