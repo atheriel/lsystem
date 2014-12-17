@@ -18,17 +18,17 @@ impl<T> LSystemType<T> {
         LSystemType { rules: func }
     }
 
-    pub fn recurse(&self, axiom: T) -> LSystemTypeIterator<T> {
-        LSystemTypeIterator { current_state: vec!(axiom), rules: self.rules }
+    pub fn recurse(&self, axiom: T) -> LSystemIterator<T> {
+        LSystemIterator { current_state: vec!(axiom), rules: self.rules }
     }
 }
 
-pub struct LSystemTypeIterator<T> {
+pub struct LSystemIterator<T> {
     current_state: Vec<T>,
     rules: fn(T) -> Vec<T>
 }
 
-impl<T: Clone> Iterator<Vec<T>> for LSystemTypeIterator<T> {
+impl<T: Clone> Iterator<Vec<T>> for LSystemIterator<T> {
     fn next(&mut self) -> Option<Vec<T>> {
         let mut new_state: Vec<T> = Vec::new();
         for element in self.current_state.clone().into_iter() {
@@ -41,6 +41,6 @@ impl<T: Clone> Iterator<Vec<T>> for LSystemTypeIterator<T> {
     }
 }
 
-#[test]
-fn it_works() {
+pub fn lsystem_iter<T>(axiom: T, rules: fn(T) -> Vec<T>) -> LSystemIterator<T> {
+    LSystemIterator { current_state: vec!(axiom), rules: rules }
 }
