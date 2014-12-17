@@ -2,6 +2,7 @@
 
 name = "lsystem"
 version = "0.0.1"
+description = "Create L-System iterators using types as an alphabet."
 authors = ["Aaron Jacobs <atheriel@gmail.com>"]
 
 [lib]

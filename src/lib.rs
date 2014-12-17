@@ -1,3 +1,7 @@
+//! A simple crate for creating L-System iterators using types as an alphabet.
+//! See the documentation for the [`lsystem_iter()`](fn.lsystem_iter.html)
+//! function for details.
+
 /// Create an iterator yielding successive iterations over the Lindenmayer
 /// Gammar defined by an axiom of type `T`, a rule function which maps values
 /// of type `T` to vectors of values of type `T`, and the set of all possible
