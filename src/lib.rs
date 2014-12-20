@@ -3,55 +3,55 @@
 //! function for details.
 
 /// Create an iterator yielding successive iterations over the Lindenmayer
-/// Gammar defined by an axiom of type `T`, a rule function which maps values
+/// System defined by an axiom of type `T`, a rule function which maps values
 /// of type `T` to vectors of values of type `T`, and the set of all possible
 /// values of type `T`.
 ///
-/// Formally, an L-System consists of three things: an alphabet, an axiom
-/// composed of letters of this alphabet, and a set of rules for transforming
-/// one set of letters into another. This iterator satisfies these requirements
-/// by taking the universe of the values of type `T` as the alphabet, one
-/// specific value of type `T` as the axiom, and a function `T -> Vec<T>` as
-/// handling any transformations. This is really just a way of using Rust's
-/// type system to express a formal grammar in a very concise way. For example,
-/// consider the [algae theory of Lindenmayer]
+/// Formally, an L-System consists of three things:
+///
+/// 1. An alphabet of letters
+/// 2. An axiom composed of letters of this alphabet; and
+/// 3. A set of "production" rules for transforming sets of letters into one
+///    another.
+///
+/// This iterator satisfies these requirements by taking the universe of the
+/// values of type `T` as the alphabet, one specific value of type `T` as the
+/// axiom, and a function `T -> Vec<T>` as handling any transformations. This
+/// is really just a way of using Rust's type system to express a formal
+/// grammar in a very concise way. And while there's no reason one could not
+/// use regular types (like `int` or `&str`) here, this method really comes
+/// into its own through the use of `enum`s.
+///
+/// For example, consider the [algae theory of Lindenmayer]
 /// (http://www.math.ubc.ca/~cass/courses/m308-03b/projects-03b/skinner/lindenmayer.htm),
 /// which can be expressed as follows:
 ///
 /// ```rust
-/// extern crate lsystem;
+/// use lsystem::lsystem_iter; 
 ///
-/// use lsystem::lsystem_iter;
-///
-/// #[deriving(Clone)]
-/// enum AlgeaState {
-///     Reproduction,
-///     Growth,
+/// // We represent Lindenmayer's states of algae cells with a type.
+/// #[deriving(Clone, Show, Eq, PartialEq)]
+/// enum Algae {
+///     A, // Reproduction State
+///     B  // Growth State
 /// }
 ///
-/// fn algae_rule(input: AlgeaState) -> Vec<AlgeaState> {
+/// // Then define all of the production rules in a single function.
+/// fn algae_rule(input: Algae) -> Vec<Algae> {
 ///     match input {
-///         AlgeaState::Reproduction => vec![AlgeaState::Reproduction,
-///                                          AlgeaState::Growth],
-///         AlgeaState::Growth => vec![AlgeaState::Reproduction]
+///         Algae::A => vec![Algae::A, Algae::B],
+///         Algae::B => vec![Algae::A]
 ///     }
 /// }
 ///
-/// fn main() {
-///     // Print out the first eight levels of the Algae sequence in the same
-///     // format as in the Wikipedia article.
-///     for (index, n) in lsystem_iter(AlgeaState::Growth, algae_rule).
-///                       take(8).enumerate() {
-///         let mut printed = format!("n = {}: ", index);
-///         for i in n.iter() {
-///             match i {
-///                 &AlgeaState::Reproduction => printed.push_str("A"),
-///                 &AlgeaState::Growth => printed.push_str("B")
-///             }
-///         }
-///         println!("{}", printed)
-///     }
-/// }
+/// // The object returned by this function is just a normal iterator, so we
+/// // can get the fifth item (which is the n = 4 iteration) in an intuitive
+/// // and idiomatic way:
+/// let algae_lsystem_n4 = lsystem_iter(Algae::B, algae_rule).skip(4).next();
+///
+/// // And confirm that it matches Lindenmayer's fourth iteration.
+/// assert_eq!(algae_lsystem_n4,
+///            Some(vec!(Algae::A, Algae::B, Algae::A, Algae::A, Algae::B)))
 /// ```
 pub fn lsystem_iter<T>(axiom: T, rules: fn(T) -> Vec<T>) -> LSystemIterator<T> {
     LSystemIterator { current_state: vec!(axiom), rules: rules, zeroth: true }
