@@ -7,7 +7,8 @@
 /// of type `T` to vectors of values of type `T`, and the set of all possible
 /// values of type `T`.
 ///
-/// Formally, an L-System consists of three things:
+/// Formally, an [L-System](http://en.wikipedia.org/wiki/l_system) consists of
+/// three things:
 ///
 /// 1. An alphabet of letters
 /// 2. An axiom composed of letters of this alphabet; and
@@ -53,19 +54,40 @@
 /// assert_eq!(algae_lsystem_n4,
 ///            Some(vec!(Algae::A, Algae::B, Algae::A, Algae::A, Algae::B)))
 /// ```
-pub fn lsystem_iter<T>(axiom: T, rules: fn(T) -> Vec<T>) -> LSystemIterator<T> {
-    LSystemIterator { current_state: vec!(axiom), rules: rules, zeroth: true }
+// pub fn lsystem_iter<T>(axiom: T, rules: fn(T) -> Vec<T>) -> LSystemIterator<T> {
+//     LSystemIterator { current_state: vec!(axiom), rules: rules, zeroth: true }
+// }
+
+pub type ProductionRule<T> = fn(T) -> Vec<T>;
+
+pub struct LSystemType<'a, T: Clone> {
+    axiom: T,
+    rules: &'a ProductionRule<T>
+}
+
+impl<'a, T: Clone> LSystemType<'a, T> {
+    pub fn new(axiom: T, rules: &'a ProductionRule<T>) -> LSystemType<'a, T> {
+        LSystemType { axiom: axiom, rules: rules }
+    }
+
+    pub fn iter(&self) -> LSystemIterator<'a, T> {
+        LSystemIterator {
+            current_state: vec!(self.axiom.clone()),
+            rules: self.rules,
+            zeroth: true
+        }
+    }
 }
 
 /// Defines an iterator over an L-System, where each successive iteration
 /// applies a series of rules to the current axiom to produce a new axiom.
-pub struct LSystemIterator<T> {
+pub struct LSystemIterator<'a, T: Clone> {
     current_state: Vec<T>,
-    rules: fn(T) -> Vec<T>,
+    rules: &'a ProductionRule<T>,
     zeroth: bool
 }
 
-impl<T: Clone> Iterator<Vec<T>> for LSystemIterator<T> {
+impl<'a, T: Clone> Iterator<Vec<T>> for LSystemIterator<'a, T> {
     fn next(&mut self) -> Option<Vec<T>> {
         // In order to ensure that the "n = 0" case returns the original axiom,
         // store whether we are in this state or not.
@@ -78,7 +100,7 @@ impl<T: Clone> Iterator<Vec<T>> for LSystemIterator<T> {
         // axiom for the iteration level.
         let mut new_state: Vec<T> = Vec::new();
         for element in self.current_state.iter().cloned() {
-            let rules = self.rules;
+            let rules = *self.rules;
             let entry = rules(element);
             new_state.push_all(entry.as_slice());
         }
