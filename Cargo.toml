@@ -12,3 +12,7 @@ path = "src/lib.rs"
 [[example]]
 name = "algae"
 path = "examples/algae.rs"
+
+[[example]]
+name = "anabaena"
+path = "examples/anabaena.rs"
