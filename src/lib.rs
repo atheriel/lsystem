@@ -134,8 +134,7 @@ impl<T: Clone> Iterator<Vec<T>> for LSystemIterator<T> {
         // axiom for the iteration level.
         let mut new_state: Vec<T> = Vec::new();
         for element in self.current_state.iter().cloned() {
-            let rules = self.rules;
-            let entry = rules(element);
+            let entry = (self.rules)(element);
             new_state.push_all(entry.as_slice());
         }
         self.current_state = new_state;
