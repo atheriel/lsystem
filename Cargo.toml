@@ -16,3 +16,7 @@ path = "examples/algae.rs"
 [[example]]
 name = "anabaena"
 path = "examples/anabaena.rs"
+
+[[example]]
+name = "parametric"
+path = "examples/parametric.rs"
