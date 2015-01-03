@@ -1,6 +1,6 @@
 extern crate lsystem;
 
-use lsystem::lsystem_iter;
+use lsystem::LSystemType;
 
 #[deriving(Clone)]
 pub enum AlgeaState {
@@ -16,9 +16,10 @@ fn algae_rule(input: AlgeaState) -> Vec<AlgeaState> {
 }
 
 fn main() {
+    let algae = LSystemType::new(AlgeaState::Growth, algae_rule);
     // Print out the first eight levels of the Algae sequence in the same
     // format as in the Wikipedia article.
-    for (index, n) in lsystem_iter(AlgeaState::Growth, algae_rule).
+    for (index, n) in algae.iter().
                       take(8).enumerate() {
         let mut printed = format!("n = {}: ", index);
         for i in n.iter() {
