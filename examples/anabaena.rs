@@ -1,9 +1,23 @@
+#![feature(macro_rules)]
+
 extern crate lsystem;
 
 use lsystem::LSystemType;
 
 use self::Polarity::{L, R};
 use self::Anabaena::{A, B};
+
+macro_rules! derive_rulefn(
+    ($T:ty, $ruleset:ident, { $($pred:pat => $succ:expr),+ }) => (
+        fn $ruleset(input: $T) -> Vec<$T> {
+            match input {
+                $(
+                $pred => $succ,
+                )+
+            }
+        }
+    );
+)
 
 #[deriving(Clone, Show, Eq, PartialEq)]
 enum Polarity { L, R }
@@ -25,14 +39,14 @@ impl std::fmt::Show for Anabaena {
     }
 }
 
-fn anabaena_rule(input: Anabaena) -> Vec<Anabaena> {
-    match input {
+derive_rulefn!(Anabaena, anabaena_rule,
+    {
         A(R) => vec!(A(L), B(R)),
         A(L) => vec!(B(L), A(R)),
         B(R) => vec!(A(R)),
-        B(L) => vec!(A(L)),
+        B(L) => vec!(A(L))
     }
-}
+)
 
 fn main() {
     let anabaena_lsystem = LSystemType::new(vec!(A(R)), anabaena_rule);
