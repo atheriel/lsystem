@@ -53,7 +53,7 @@
 //! #     }
 //! # }
 //!
-//! let algae_lsystem = LSystemType::new(Algae::B, algae_rule);
+//! let algae_lsystem = LSystemType::new(vec!(Algae::B), algae_rule);
 //!
 //! // The iter() method returns a normal Rust iterator, so to get the fifth
 //! // item (which is the n = 4 iteration) we use the following idiom:
@@ -68,7 +68,7 @@
 /// this type definition.
 pub type ProductionRule<T> = fn(T) -> Vec<T>;
 
-/// Create the Lindenmayer System defined by an axiom of type `T`, a rule
+/// Create the Lindenmayer System defined by an axiom of type `Vec<T>`, a rule
 /// function which maps values of type `T` to vectors of values of type `T`,
 /// and the set of all possible values of type `T`.
 ///
@@ -95,18 +95,18 @@ pub type ProductionRule<T> = fn(T) -> Vec<T>;
 /// of iteration, but be warned: the iterator will never be exhausted, so any
 /// loops must be broken manually.
 pub struct LSystemType<T: Clone> {
-    axiom: T,
+    axiom: Vec<T>,
     rules: ProductionRule<T>
 }
 
 impl<T: Clone> LSystemType<T> {
-    pub fn new(axiom: T, rules: ProductionRule<T>) -> LSystemType<T> {
+    pub fn new(axiom: Vec<T>, rules: ProductionRule<T>) -> LSystemType<T> {
         LSystemType { axiom: axiom, rules: rules }
     }
 
     pub fn iter(&self) -> LSystemIterator<T> {
         LSystemIterator {
-            current_state: vec!(self.axiom.clone()),
+            current_state: self.axiom.clone(),
             rules: self.rules,
             zeroth: true
         }

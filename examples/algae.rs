@@ -16,7 +16,7 @@ fn algae_rule(input: AlgeaState) -> Vec<AlgeaState> {
 }
 
 fn main() {
-    let algae = LSystemType::new(AlgeaState::Growth, algae_rule);
+    let algae = LSystemType::new(vec!(AlgeaState::Growth), algae_rule);
     // Print out the first eight levels of the Algae sequence in the same
     // format as in the Wikipedia article.
     for (index, n) in algae.iter().

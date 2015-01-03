@@ -35,7 +35,7 @@ fn anabaena_rule(input: Anabaena) -> Vec<Anabaena> {
 }
 
 fn main() {
-    let anabaena_lsystem = LSystemType::new(A(R), anabaena_rule);
+    let anabaena_lsystem = LSystemType::new(vec!(A(R)), anabaena_rule);
 
     for item in anabaena_lsystem.iter().skip(4).next().unwrap().iter() {
         print!("{} ", item)
