@@ -4,8 +4,6 @@
 //! See example 1.7, pages 42-43 in the text for details. The book is available
 //! online at <http://algorithmicbotany.org/papers/>.
 
-#![feature(macro_rules)]
-
 extern crate lsystem;
 
 use lsystem::LSystemType;
@@ -15,7 +13,7 @@ use self::Parametric::{A, B, C};
 
 // Define a simple procedural macro to generate a function from more
 // conventional rule syntax.
-macro_rules! derive_rulefn(
+macro_rules! derive_rulefn{
     ($T:ty, $ruleset:ident, { $($pred:pat => $succ:expr),+ }) => (
         fn $ruleset(input: $T) -> Vec<$T> {
             match input {
@@ -25,11 +23,11 @@ macro_rules! derive_rulefn(
             }
         }
     );
-)
+}
 
 // This type parameterizes two of its variants with real numbers, allowing
 // much more flexibility in the definition of growth rules.
-#[deriving(Clone, Show)]
+#[derive(Clone, Show)]
 enum Parametric {
     A(f32, f32), B(f32), C
 }
@@ -53,7 +51,7 @@ derive_rulefn!(Parametric, parametric_rule,
         // C is a constant in this L-system.
         C => vec!(C)
     }
-)
+);
 
 fn main() {
     let parametric_lsystem =

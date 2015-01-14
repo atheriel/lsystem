@@ -1,12 +1,10 @@
-#![feature(macro_rules)]
-
 extern crate lsystem;
 
 use lsystem::LSystemType;
 
 use self::Anabaena::{Ar, Al, Br, Bl};
 
-macro_rules! derive_rulefn(
+macro_rules! derive_rulefn{
     ($T:ty, $ruleset:ident, { $($pred:pat => $succ:expr),+ }) => (
         fn $ruleset(input: $T) -> Vec<$T> {
             match input {
@@ -16,9 +14,9 @@ macro_rules! derive_rulefn(
             }
         }
     );
-)
+}
 
-#[deriving(Clone)]
+#[derive(Clone)]
 enum Anabaena {
     Ar, Al,
     Br, Bl
@@ -42,7 +40,7 @@ derive_rulefn!(Anabaena, anabaena_rule,
         Br => vec!(Ar),
         Bl => vec!(Al)
     }
-)
+);
 
 fn main() {
     let anabaena_lsystem = LSystemType::new(vec!(Ar), anabaena_rule);

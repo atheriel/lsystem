@@ -2,7 +2,7 @@ extern crate lsystem;
 
 use lsystem::LSystemType;
 
-#[deriving(Clone)]
+#[derive(Clone, Copy)]
 pub enum AlgeaState {
     Reproduction,
     Growth,

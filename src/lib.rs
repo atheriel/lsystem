@@ -121,7 +121,9 @@ pub struct LSystemIterator<T: Clone> {
     zeroth: bool
 }
 
-impl<T: Clone> Iterator<Vec<T>> for LSystemIterator<T> {
+impl<T: Clone> Iterator for LSystemIterator<T> {
+    type Item = Vec<T>;
+
     fn next(&mut self) -> Option<Vec<T>> {
         // In order to ensure that the "n = 0" case returns the original axiom,
         // store whether we are in this state or not.
