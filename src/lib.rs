@@ -64,10 +64,6 @@
 //!            vec!(Algae::A, Algae::B, Algae::A, Algae::A, Algae::B))
 //! ```
 
-/// The function used as a part of the definition of the L-System must match
-/// this type definition.
-pub type ProductionRule<T> = fn(T) -> Vec<T>;
-
 /// Create the Lindenmayer System defined by an axiom of type `Vec<T>`, a rule
 /// function which maps values of type `T` to vectors of values of type `T`,
 /// and the set of all possible values of type `T`.
@@ -94,19 +90,19 @@ pub type ProductionRule<T> = fn(T) -> Vec<T>;
 /// successive iterations of the L-System. This allows very idiomatic handling
 /// of iteration, but be warned: the iterator will never be exhausted, so any
 /// loops must be broken manually.
-pub struct LSystemType<T: Clone> {
+pub struct LSystemType<T, F: FnMut(T) -> Vec<T>> {
     axiom: Vec<T>,
-    rules: ProductionRule<T>
+    rules: F
 }
 
-impl<T: Clone> LSystemType<T> {
-    pub fn new(axiom: Vec<T>, rules: ProductionRule<T>) -> LSystemType<T> {
+impl<T, F> LSystemType<T, F> where F: FnMut(T) -> Vec<T> {
+    pub fn new(axiom: Vec<T>, rules: F) -> LSystemType<T, F> {
         LSystemType { axiom: axiom, rules: rules }
     }
 
-    pub fn iter(&self) -> LSystemIterator<T> {
+    pub fn iter(self) -> LSystemIterator<T, F> {
         LSystemIterator {
-            current_state: self.axiom.clone(),
+            current_state: self.axiom,
             rules: self.rules,
             zeroth: true
         }
@@ -115,13 +111,13 @@ impl<T: Clone> LSystemType<T> {
 
 /// Defines an iterator over an L-System, where each successive iteration
 /// applies a series of rules to the current axiom to produce a new axiom.
-pub struct LSystemIterator<T: Clone> {
+pub struct LSystemIterator<T, F: FnMut(T) -> Vec<T>> {
     current_state: Vec<T>,
-    rules: ProductionRule<T>,
+    rules: F,
     zeroth: bool
 }
 
-impl<T: Clone> Iterator for LSystemIterator<T> {
+impl<T, F> Iterator for LSystemIterator<T, F> where T: Clone, F: FnMut(T) -> Vec<T> {
     type Item = Vec<T>;
 
     fn next(&mut self) -> Option<Vec<T>> {
