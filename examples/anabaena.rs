@@ -1,6 +1,6 @@
 extern crate lsystem;
 
-use lsystem::LSystemType;
+use lsystem::LSystem;
 
 use self::Anabaena::{Ar, Al, Br, Bl};
 
@@ -43,9 +43,9 @@ derive_rulefn!(Anabaena, anabaena_rule,
 );
 
 fn main() {
-    let anabaena_lsystem = LSystemType::new(vec!(Ar), anabaena_rule);
+    let mut anabaena_lsystem = LSystem::new(vec!(Ar), anabaena_rule);
 
-    for item in anabaena_lsystem.iter().skip(4).next().unwrap().iter() {
+    for item in anabaena_lsystem.skip(4).next().unwrap().iter() {
         print!("{:?} ", item)
     }
     

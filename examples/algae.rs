@@ -1,6 +1,6 @@
 extern crate lsystem;
 
-use lsystem::LSystemType;
+use lsystem::LSystem;
 
 // Re-import the enum variants for more concise code.
 use self::AlgeaState::{A, B};
@@ -13,14 +13,14 @@ enum AlgeaState {
 
 fn main() {
     // Use a closure to express the growth patterns of the algae cells.
-    let algae = LSystemType::new(vec!(AlgeaState::B), |x| match x {
+    let mut algae = LSystem::new(vec!(AlgeaState::B), |x| match x {
         A => vec![A, B],
         B => vec![A]
     });
 
     // Print out the first eight levels of the Algae sequence in the same
     // format as in the Wikipedia article.
-    for (index, n) in algae.iter().take(8).enumerate() {
+    for (index, n) in algae.take(8).enumerate() {
         let mut printed = format!("n = {}: ", index);
         for i in n.iter() {
             match i {

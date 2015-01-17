@@ -86,49 +86,39 @@
 /// The [`iter()`](#method.iter) method returns a Rust iterator that yields successive iterations
 /// of the L-System. This allows very idiomatic handling of iteration, but be warned: the iterator
 /// will never be exhausted, so any loops must be broken manually.
-pub struct LSystemType<T, F: FnMut(T) -> Vec<T>> {
+pub struct LSystem<T, F: FnMut(T) -> Vec<T>> {
     axiom: Vec<T>,
-    rules: F
-}
-
-impl<T, F> LSystemType<T, F> where F: FnMut(T) -> Vec<T> {
-    /// Creates a new representation of an L-system with the given axiom and production rules.
-    pub fn new(axiom: Vec<T>, rules: F) -> LSystemType<T, F> {
-        LSystemType { axiom: axiom, rules: rules }
-    }
-
-    /// Consumes the `LSystemType` to produce an iterator.
-    pub fn iter(self) -> LSystemIterator<T, F> {
-        LSystemIterator { current_state: self.axiom, rules: self.rules, zeroth: true }
-    }
-}
-
-/// Defines an iterator over an L-System, where each successive iteration applies a series of rules
-/// to the current axiom to produce a new axiom.
-pub struct LSystemIterator<T, F: FnMut(T) -> Vec<T>> {
-    current_state: Vec<T>,
     rules: F,
     zeroth: bool
 }
 
-impl<T, F> Iterator for LSystemIterator<T, F> where T: Clone, F: FnMut(T) -> Vec<T> {
+impl<T, F> LSystem<T, F> where F: FnMut(T) -> Vec<T> {
+    /// Creates a new representation of an L-system with the given axiom and production rules.
+    pub fn new(axiom: Vec<T>, rules: F) -> LSystem<T, F> {
+        LSystem { axiom: axiom, rules: rules, zeroth: true }
+    }
+}
+
+impl<T, F> Iterator for LSystem<T, F> where T: Clone, F: FnMut(T) -> Vec<T> {
     type Item = Vec<T>;
 
+    /// Yield the next iteration of the L-system by rewriting the current axiom's contents using
+    /// the production rules.
     fn next(&mut self) -> Option<Vec<T>> {
         // In order to ensure that the "n = 0" case returns the original axiom, store whether we
         // are in this state or not.
         if self.zeroth {
             self.zeroth = false;
-            return Some(self.current_state.clone())
+            return Some(self.axiom.clone())
         }
 
         // Otherwise, apply the production rules to the axiom to produce a new axiom for the
         // iteration level.
-        let mut new_state = Vec::new();
-        for element in self.current_state.drain() {
-            new_state.extend((self.rules)(element).into_iter());
+        let mut new_axiom = Vec::new();
+        for element in self.axiom.drain() {
+            new_axiom.extend((self.rules)(element).into_iter());
         }
-        self.current_state = new_state;
-        Some(self.current_state.clone())
+        self.axiom = new_axiom;
+        Some(self.axiom.clone())
     }
 }

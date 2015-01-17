@@ -6,7 +6,7 @@
 
 extern crate lsystem;
 
-use lsystem::LSystemType;
+use lsystem::LSystem;
 
 // Re-import the enum variants for more concise code.
 use self::Parametric::{A, B, C};
@@ -54,8 +54,8 @@ derive_rulefn!(Parametric, parametric_rule,
 );
 
 fn main() {
-    let parametric_lsystem =
-        LSystemType::new(vec!(B(2.0), A(4.0, 4.0)), parametric_rule);
+    let mut parametric_lsystem =
+        LSystem::new(vec!(B(2.0), A(4.0, 4.0)), parametric_rule);
     
-    println!("{:?}", parametric_lsystem.iter().nth(4).unwrap())
+    println!("{:?}", parametric_lsystem.nth(4).unwrap())
 }
