@@ -42,7 +42,7 @@
 //! iteration (i.e. `n = 4`) of Lindenmayer's algae L-System is ABAAB, which we
 //! can confirm as follows:
 //!
-//! ```rust
+//! ```ignore
 //! use lsystem::LSystemType;
 //! # #[deriving(Clone, Show, Eq, PartialEq)]
 //! # enum Algae { A, B }
@@ -57,7 +57,7 @@
 //!
 //! // The iter() method returns a normal Rust iterator, so to get the fifth
 //! // item (which is the n = 4 iteration) we use the following idiom:
-//! let algae_lsystem_n4 = algae_lsystem.iter().skip(4).next().unwrap();
+//! let algae_lsystem_n4 = algae_lsystem.iter().nth(4).unwrap();
 //!
 //! // And confirm that it matches Lindenmayer's fifth iteration.
 //! assert_eq!(algae_lsystem_n4,
