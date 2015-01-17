@@ -124,10 +124,9 @@ impl<T, F> Iterator for LSystemIterator<T, F> where T: Clone, F: FnMut(T) -> Vec
 
         // Otherwise, apply the production rules to the axiom to produce a new axiom for the
         // iteration level.
-        let mut new_state: Vec<T> = Vec::new();
-        for element in self.current_state.iter().cloned() {
-            let entry = (self.rules)(element);
-            new_state.push_all(entry.as_slice());
+        let mut new_state = Vec::new();
+        for element in self.current_state.drain() {
+            new_state.extend((self.rules)(element).into_iter());
         }
         self.current_state = new_state;
         Some(self.current_state.clone())
