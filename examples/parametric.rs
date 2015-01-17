@@ -57,5 +57,5 @@ fn main() {
     let parametric_lsystem =
         LSystemType::new(vec!(B(2.0), A(4.0, 4.0)), parametric_rule);
     
-    println!("{}", parametric_lsystem.iter().skip(4).next().unwrap())
+    println!("{:?}", parametric_lsystem.iter().nth(4).unwrap())
 }

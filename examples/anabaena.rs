@@ -46,7 +46,7 @@ fn main() {
     let anabaena_lsystem = LSystemType::new(vec!(Ar), anabaena_rule);
 
     for item in anabaena_lsystem.iter().skip(4).next().unwrap().iter() {
-        print!("{} ", item)
+        print!("{:?} ", item)
     }
     
     println!("")
