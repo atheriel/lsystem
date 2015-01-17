@@ -2,30 +2,30 @@ extern crate lsystem;
 
 use lsystem::LSystemType;
 
-#[derive(Clone, Copy)]
-pub enum AlgeaState {
-    Reproduction,
-    Growth,
-}
+// Re-import the enum variants for more concise code.
+use self::AlgeaState::{A, B};
 
-fn algae_rule(input: AlgeaState) -> Vec<AlgeaState> {
-    match input {
-        AlgeaState::Reproduction => vec![AlgeaState::Reproduction, AlgeaState::Growth],
-        AlgeaState::Growth => vec![AlgeaState::Reproduction]
-    }
+#[derive(Clone, Copy)]
+enum AlgeaState {
+    #[doc = "Reproduction State"] A,
+    #[doc = "Growth State"] B
 }
 
 fn main() {
-    let algae = LSystemType::new(vec!(AlgeaState::Growth), algae_rule);
+    // Use a closure to express the growth patterns of the algae cells.
+    let algae = LSystemType::new(vec!(AlgeaState::B), |x| match x {
+        A => vec![A, B],
+        B => vec![A]
+    });
+
     // Print out the first eight levels of the Algae sequence in the same
     // format as in the Wikipedia article.
-    for (index, n) in algae.iter().
-                      take(8).enumerate() {
+    for (index, n) in algae.iter().take(8).enumerate() {
         let mut printed = format!("n = {}: ", index);
         for i in n.iter() {
             match i {
-                &AlgeaState::Reproduction => printed.push_str("A"),
-                &AlgeaState::Growth => printed.push_str("B")
+                &AlgeaState::A => printed.push_str("A"),
+                &AlgeaState::B => printed.push_str("B")
             }
         }
         println!("{}", printed)
