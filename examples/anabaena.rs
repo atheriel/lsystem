@@ -43,7 +43,7 @@ derive_rulefn!(Anabaena, anabaena_rule,
 );
 
 fn main() {
-    let mut anabaena_lsystem = LSystem::new(vec!(Ar), anabaena_rule);
+    let anabaena_lsystem = LSystem::new(vec!(Ar), anabaena_rule);
 
     for item in anabaena_lsystem.skip(4).next().unwrap().iter() {
         print!("{:?} ", item)

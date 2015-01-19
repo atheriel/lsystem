@@ -13,7 +13,7 @@ enum AlgeaState {
 
 fn main() {
     // Use a closure to express the growth patterns of the algae cells.
-    let mut algae = LSystem::new(vec!(AlgeaState::B), |x| match x {
+    let algae = LSystem::new(vec!(AlgeaState::B), |x| match x {
         A => vec![A, B],
         B => vec![A]
     });
