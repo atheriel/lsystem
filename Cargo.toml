@@ -20,3 +20,7 @@ path = "examples/anabaena.rs"
 [[example]]
 name = "parametric"
 path = "examples/parametric.rs"
+
+[[example]]
+name = "koch"
+path = "examples/koch.rs"
