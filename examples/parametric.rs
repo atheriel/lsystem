@@ -27,7 +27,7 @@ macro_rules! derive_rulefn{
 
 // This type parameterizes two of its variants with real numbers, allowing
 // much more flexibility in the definition of growth rules.
-#[derive(Clone, Show)]
+#[derive(Clone, Debug)]
 enum Parametric {
     A(f32, f32), B(f32), C
 }

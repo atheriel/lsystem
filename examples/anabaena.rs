@@ -22,7 +22,7 @@ enum Anabaena {
     Br, Bl
 }
 
-impl std::fmt::Show for Anabaena {
+impl std::fmt::Debug for Anabaena {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
             &Ar => write!(f, "-->"),
