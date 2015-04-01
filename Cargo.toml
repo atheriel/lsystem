@@ -24,3 +24,15 @@ path = "examples/parametric.rs"
 [[example]]
 name = "koch"
 path = "examples/koch.rs"
+
+[[example]]
+name = "sierpinski"
+path = "examples/sierpinski.rs"
+
+[[example]]
+name = "seaweed"
+path = "examples/seaweed.rs"
+
+[[example]]
+name = "penrose"
+path = "examples/penrose.rs"

@@ -1,28 +1,7 @@
 extern crate lsystem;
 
 use lsystem::LSystem;
-
-enum Turtle {
-    Forward(u32), Left(u32), Right(u32)
-}
-
-trait TurtleInterpretation {
-    fn to_turtle(&self) -> Turtle;
-}
-
-fn draw<T: TurtleInterpretation>(v: Vec<T>) {
-    println!("import turtle\n\nturtle.speed(0)\n");
-
-    for command in v.iter() {
-        match command.to_turtle() {
-            Turtle::Forward(val) => println!("turtle.forward({})", val),
-            Turtle::Left(val) => println!("turtle.left({})", val),
-            Turtle::Right(val) => println!("turtle.right({})", val)
-        }
-    }
-
-    println!("\nturtle.exitonclick()\n");
-}
+use lsystem::turtle::{Turtle, TurtleInterpretation, draw};
 
 #[derive(Clone)]
 enum Koch {
@@ -32,9 +11,9 @@ enum Koch {
 impl TurtleInterpretation for Koch {
     fn to_turtle(&self) -> Turtle {
         match *self {
-            Koch::F => Turtle::Forward(10),
-            Koch::Plus => Turtle::Left(90),
-            Koch::Minus => Turtle::Right(90)
+            Koch::F     => Turtle::Forward(10),
+            Koch::Plus  => Turtle::Left(90.0),
+            Koch::Minus => Turtle::Right(90.0)
         }
     }
 }

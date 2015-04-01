@@ -118,3 +118,31 @@ impl<T, F> Iterator for LSystem<T, F> where T: Clone, F: FnMut(T) -> Vec<T> {
         Some(self.axiom.clone())
     }
 }
+
+pub mod turtle {
+
+    /// Note that this is only a small subset of more complete Turtle graphics implementations.
+    #[derive(Copy, Clone)]
+    pub enum Turtle {
+        Forward(u32), Left(f32), Right(f32), Push, Pop, Dummy
+    }
+
+    pub trait TurtleInterpretation {
+        fn to_turtle(&self) -> Turtle;
+    }
+
+    pub fn draw<T: TurtleInterpretation>(v: Vec<T>) {
+        println!("import turtle\n\nturtle.speed(0)\n");
+
+        for command in v.iter() {
+            match command.to_turtle() {
+                Turtle::Forward(val) => println!("turtle.forward({})", val),
+                Turtle::Left(val)    => println!("turtle.left({})", val),
+                Turtle::Right(val)   => println!("turtle.right({})", val),
+                _ => ()
+            }
+        }
+
+        println!("\nturtle.exitonclick()\n");
+    }
+}
