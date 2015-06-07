@@ -75,27 +75,27 @@
 ///
 /// This definition satisfies these requirements by taking the universe of the values of type `T`
 /// as the alphabet, one specific vector of values of type `T` as the axiom, and a function or
-/// closure of type `FnMut(T) -> Vec<T>` for handling any transformations. This is really just a
+/// closure of type `Fn(T) -> Vec<T>` for handling any transformations. This is really just a
 /// way of using Rust's type system to express a formal grammar in a very concise way. And while
 /// there's no reason one could not use regular types (like `int` or `&str`) here, this method
 /// really comes into its own through the use of `enum`s.
 ///
 /// Since this type implements the normal iterator trait, it can be used in many idiomatic ways.
 /// But be warned: the iterator will never be exhausted, so any loops must be broken manually.
-pub struct LSystem<T, F: FnMut(T) -> Vec<T>> {
+pub struct LSystem<T, F: Fn(T) -> Vec<T>> {
     axiom: Vec<T>,
     rules: F,
     zeroth: bool
 }
 
-impl<T, F> LSystem<T, F> where F: FnMut(T) -> Vec<T> {
+impl<T, F> LSystem<T, F> where F: Fn(T) -> Vec<T> {
     /// Creates a new representation of an L-system with the given axiom and production rules.
     pub fn new(axiom: Vec<T>, rules: F) -> LSystem<T, F> {
         LSystem { axiom: axiom, rules: rules, zeroth: true }
     }
 }
 
-impl<T, F> Iterator for LSystem<T, F> where T: Clone, F: FnMut(T) -> Vec<T> {
+impl<T, F> Iterator for LSystem<T, F> where T: Clone, F: Fn(T) -> Vec<T> {
     type Item = Vec<T>;
 
     /// Yield the next iteration of the L-system by rewriting the current axiom's contents using
