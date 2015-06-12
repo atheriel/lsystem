@@ -60,8 +60,7 @@
 //!            vec!(Algae::A, Algae::B, Algae::A, Algae::A, Algae::B))
 //! ```
 
-// Currently required for using `drain`.
-#![feature(collections_drain)]
+use std::mem;
 
 /// Create the Lindenmayer System defined by an axiom of type `Vec<T>`, a rule function (or
 /// closure) which maps values of type `T` to vectors of values of type `T`, and the set of all
@@ -110,11 +109,11 @@ impl<T, F> Iterator for LSystem<T, F> where T: Clone, F: FnMut(T) -> Vec<T> {
 
         // Otherwise, apply the production rules to the axiom to produce a new axiom for the
         // iteration level.
-        let mut new_axiom = Vec::new();
-        for element in self.axiom.drain(..) {
-            new_axiom.extend((self.rules)(element).into_iter());
+        let old_axiom = mem::replace(&mut self.axiom, Vec::new());
+
+        for element in old_axiom.into_iter() {
+            self.axiom.extend((self.rules)(element).into_iter());
         }
-        self.axiom = new_axiom;
         Some(self.axiom.clone())
     }
 }
